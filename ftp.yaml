@@ -1,2 +1,4 @@
 #!/bin/bash
-dggg
+mostrar_ayuda() {
+  echo " "
+}
