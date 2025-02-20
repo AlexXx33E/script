@@ -23,9 +23,10 @@ instalar_servicio() {
 }
 
 eliminar_servicio() {
-  echo "Eliminando el servicio FTP..."
-  sudo apt remove -y vsftpd
-  echo "Servicio eliminado."
+  echo "Eliminando el servicio FTP por completo..."
+  sudo apt purge -y vsftpd && sudo apt autoremove -y
+  sudo rm -rf /etc/vsftpd /var/log/vsftpd.log /srv/ftp /home/ftp
+  echo "Servicio eliminado completamente."
 }
 
 ejecutar_servicio() {
@@ -63,6 +64,7 @@ fi
 if [ "$1" == "--menu" ]; then
   menu
   exit 0
+fi
 
 if [ "$1" == "--instalación" ]; then
   instalar_servicio
