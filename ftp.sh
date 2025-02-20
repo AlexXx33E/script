@@ -39,7 +39,10 @@ parar_servicio() {
   echo "El servicio está detenido."
 } 
 
-
+mostrar_logs() {
+  echo "Mostrando los logs del servicio FTP..."
+  sudo journalctl -u vsftpd --no-pager | tail -n 20
+}
 
 if [ "$1" == "--help" ]; then
   mostrar_ayuda
