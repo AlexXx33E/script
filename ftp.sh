@@ -31,7 +31,14 @@ ejecutar_servicio() {
   echo "Iniciando servicio FTP..."
   sudo systemctl start vsftpd
   echo "El servicio ya está activo."
-}
+} 
+
+parar_servicio() {
+  echo "Iniciando servicio FTP..."
+  sudo systemctl stop vsftpd
+  echo "El servicio está detenido."
+} 
+
 
 
 if [ "$1" == "--help" ]; then
