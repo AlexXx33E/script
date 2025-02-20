@@ -16,10 +16,15 @@ menu() {
 }
 
 instalar_servicio() {
-  echo "Instalando vsftpd..."
+  echo "Instalando el servicio FTP..."
   sudo apt update && sudo apt install -y vsftpd
   echo "Instalación completada"
 }
+ eliminar_servicio() {
+  echo "Eliminando el servicio FTP..."
+  sudo apt remove -y vsftpd
+  echo "Servicio eliminado."
+ }
 
 if [ "$1" == "--help" ]; then
   mostrar_ayuda
