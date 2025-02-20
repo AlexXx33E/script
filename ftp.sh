@@ -74,4 +74,18 @@ if [ "$1" == "--eliminar" ]; then
   exit 0
 fi
 
- 
+if [ "$1" == "--ejecutar" ]; then
+  ejecutar_servicio
+  exit 0
+fi
+
+if [ "$1" == "--stop" ]; then
+  parar_servicio
+  exit 0
+fi
+
+if [ "$1" == "--logs" ]; then
+  mostrar_logs
+  exit 0
+fi
+
