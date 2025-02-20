@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mostrar_ayuda() {
   echo "Instalación servicio FTP."
   echo "--datos_red: Muestra los datos de red de tu equipo."
@@ -55,15 +56,22 @@ if [ "$1" == "--datos_red" ]; then
 fi
 
 if [ "$1" == "--status" ]; then
-  systemctl status vsftpd 
-  #Control de errores ("Error. No está instalado.")
+  systemctl status vsftpd || echo "Error. No está instalado."
   exit 0
 fi
 
 if [ "$1" == "--menu" ]; then
   menu
   exit 0
-  if [ -z "$2" == "--instalación" ]
+
+if [ "$1" == "--instalación" ]; then
+  instalar_servicio
+  exit 0
+fi
+
+if [ "$1" == "--eliminar" ]; then
+  eliminar_servicio
+  exit 0
 fi
 
  
