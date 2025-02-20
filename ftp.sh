@@ -20,11 +20,19 @@ instalar_servicio() {
   sudo apt update && sudo apt install -y vsftpd
   echo "Instalación completada"
 }
- eliminar_servicio() {
+
+eliminar_servicio() {
   echo "Eliminando el servicio FTP..."
   sudo apt remove -y vsftpd
   echo "Servicio eliminado."
- }
+}
+
+ejecutar_servicio() {
+  echo "Iniciando servicio FTP..."
+  sudo systemctl start vsftpd
+  echo "El servicio ya está activo."
+}
+
 
 if [ "$1" == "--help" ]; then
   mostrar_ayuda
