@@ -89,3 +89,5 @@ if [ "$1" == "--logs" ]; then
   exit 0
 fi
 
+echo "Opción no válida. Usa --help para mostrar la ayuda del menú."
+exit 1
