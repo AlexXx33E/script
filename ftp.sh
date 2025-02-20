@@ -15,6 +15,12 @@ menu() {
   echo "--logs: Muestra los logs."
 }
 
+instalar_servicio() {
+  echo "Instalando vsftpd..."
+  sudo apt update && sudo apt install -y vsftpd
+  echo "Instalación completada"
+}
+
 if [ "$1" == "--help" ]; then
   mostrar_ayuda
   exit 0
@@ -35,7 +41,6 @@ if [ "$1" == "--menu" ]; then
   menu
   exit 0
   if [ -z "$2" == "--instalación" ]
-  exit 0
 fi
 
  
