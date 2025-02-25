@@ -42,8 +42,27 @@ parar_servicio() {
 } 
 
 mostrar_logs() {
-  echo "Mostrando los logs del servicio FTP..."
-  sudo journalctl -u vsftpd --no-pager | tail -n 20
+  echo "Selecciona una opción para consultar los logs:"
+  echo "1- Mostrar los últimos 20 logs"
+  echo "2- Consulta por tipo (INFO, WARNING, ERROR)"
+  echo "3- Consulta por fecha"
+  echo "4- Salir"
+  read -p "Opción: " opcion
+
+  if [ "$opcion" == "1" ]; then
+    sudo journalctl -u vsftpd --no-pager | tail -n 20
+  elif [ "$opcion" == "2" ]; then
+    read -p "Ingrese el tipo de log (INFO, WARNING, ERROR): " tipo
+    sudo journalctl -u vsftpd --no-pager | grep -i "$tipo"
+  elif [ "$opcion" == "3" ]; then
+    read -p "Ingrese la fecha (YYYY-MM-DD): " fecha
+    sudo journalctl -u vsftpd --since "$fecha"
+  elif [ "$opcion" == "4" ]; then
+    echo "Saliendo..."
+    return
+  eliminar_servicio
+    echo "Opción no válida"
+  fi
 }
 
 if [ "$1" == "--help" ]; then
