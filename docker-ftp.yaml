@@ -5,3 +5,5 @@ RUN apt-gep update && apt-get install -y vsftpd
 COPY ftp.sh /home/maria/ftp.sh
 
 RUN chmod +x /home/maria/ftp.sh
+
+EXPOSE 21 
