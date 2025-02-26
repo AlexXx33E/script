@@ -1,1 +1,4 @@
-Playbook ansible 
+---
+- name: Instalar y configurar servidor FTP en Ubuntu
+  hosts: all
+  become: yes
