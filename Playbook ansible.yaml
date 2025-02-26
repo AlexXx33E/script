@@ -1,0 +1,9 @@
+---
+- name: Instalar y configurar servidor FTP en Ubuntu
+  hosts: all
+  become: yes
+  tasks:
+    - name: Instalar el paquete vsftpd
+      apt:
+        name: vsftpd
+        state: present
