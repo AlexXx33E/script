@@ -60,32 +60,32 @@ comandos_opciones() {
   echo "--logs: Muestra los logs."
 }
 
-instalar_servicio() {
+instalar_servicio_comandos() {
   echo "Instalando el servicio FTP..."
   sudo apt update && sudo apt install -y vsftpd
   echo "Instalación completada"
 }
 
-eliminar_servicio() {
+eliminar_servicio_comandos() {
   echo "Eliminando el servicio FTP por completo..."
   sudo apt purge -y vsftpd && sudo apt autoremove -y
   sudo rm -rf /etc/vsftpd /var/log/vsftpd.log /srv/ftp /home/ftp
   echo "Servicio eliminado completamente."
 }
 
-ejecutar_servicio() {
+ejecutar_servicio_comandos() {
   echo "Iniciando servicio FTP..."
   sudo systemctl start vsftpd
   echo "El servicio ya está activo."
 } 
 
-parar_servicio() {
+parar_servicio_comandos() {
   echo "Iniciando servicio FTP..."
   sudo systemctl stop vsftpd
   echo "El servicio está detenido."
 } 
 
-mostrar_logs() {
+mostrar_logs_comandos() {
   echo "Selecciona una opción para consultar los logs:"
   echo "1- Mostrar los últimos 20 logs"
   echo "2- Consulta por tipo (INFO, WARNING, ERROR)"
@@ -130,27 +130,47 @@ if [ "$1" == "--menu" ]; then
 fi
 
 if [ "$1" == "--instalación" ]; then
-  instalar_servicio
+  instalar_servicio_comandos
   exit 0
 fi
 
 if [ "$1" == "--eliminar" ]; then
-  eliminar_servicio
+  eliminar_servicio_comandos
   exit 0
 fi
 
 if [ "$1" == "--ejecutar" ]; then
-  ejecutar_servicio
+  ejecutar_servicio_comandos
   exit 0
 fi
 
 if [ "$1" == "--stop" ]; then
-  parar_servicio
+  parar_servicio_comandos
   exit 0
 fi
 
 if [ "$1" == "--logs" ]; then
-  mostrar_logs
+  mostrar_logs_comandos
+  exit 0
+fi
+
+if [ "$1" == "--menu_docker" ]; then
+  opciones_docker
+  exit 0
+fi
+
+if [ "$1" == "--help_docker" ]; then
+  menu_docker
+  exit 0
+fi
+
+if [ "$1" == "--menu_ansible" ]; then
+  opciones_ansible
+  exit 0
+fi
+
+if [ "$1" == "--help_ansible" ]; then
+  menu_ansible
   exit 0
 fi
 
