@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 RUN apt-gep update && \ apt-get install -y vsftpd && \ apt-get clean
-COPY ftp.sh /home/maria/ftp.sh
+COPY vsftpd.conf /etc/vsftpd.conf
 RUN chmod +x /home/maria/ftp.sh
 EXPOSE 21 
 CMD ["/home/maria/ftp.sh"]
