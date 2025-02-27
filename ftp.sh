@@ -120,6 +120,7 @@ mostrar_logs_comandos() {
   fi
 }
 
+
 if [ "$1" == "--help" ]; then
   menu_comandos
   exit 0
@@ -152,6 +153,16 @@ fi
 
 if [ "$1" == "--logs" ]; then
   mostrar_logs_comandos
+  exit 0
+fi
+
+if [ "$1" == "--crear_usuario" ]; then
+  crear_usuario
+  exit 0
+fi
+
+if [ "$1" == "--eliminar_usuario" ]; then
+  eliminar_usuario
   exit 0
 fi
 
