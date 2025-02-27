@@ -36,3 +36,8 @@
         owner: ftpuser
         group: ftpuser
         mode: '0755'
+    
+    - name: Reiniciar servicio
+      service:
+        name: vsftpd
+        state: restarted
