@@ -1,6 +1,13 @@
 #!/bin/bash
 
-mostrar_ayuda() {
+menu_principal() {
+    echo "Elija el método de instalación del servicio FTP:"
+    echo "--comandos: Irás al menú de instalación mediante comandos."
+    echo "--Docker: Empezarás la instalación mediante Docker."
+    echo "--Ansible: El servicio FTP se instalará mediante el playbook de Ansible seleccionado." 
+}
+
+menu_comandos() {
   echo "Instalación servicio FTP."
   echo "--datos_red: Muestra los datos de red de tu equipo."
   echo "--status: Muestra el estado del servicio."
@@ -8,7 +15,7 @@ mostrar_ayuda() {
   echo "--help: Muestra la ayuda del programa."
 }
 
-menu() {
+comandos_opciones() {
   echo "--instalación: Instala el servicio FTP."
   echo "--eliminar: Elimina el servicio FTP."
   echo "--ejecutar: Puesta en marcha del servicio."
