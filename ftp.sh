@@ -2,9 +2,11 @@
 
 menu_principal() {
     echo "Elija el método de instalación del servicio FTP:"
-    echo "--comandos: Irás al menú de instalación mediante comandos."
-    echo "--Docker: Empezarás la instalación mediante Docker."
-    echo "--Ansible: El servicio FTP se instalará mediante el playbook de Ansible seleccionado." 
+    echo "1) --comandos: Irás al menú de instalación mediante comandos."
+    echo "2) --Docker: Empezarás la instalación mediante Docker."
+    echo "3) --Ansible: El servicio FTP se instalará mediante el playbook de Ansible seleccionado." 
+    echo "4) Salir: Sale del script".
+    read -p "Opción: " opcion
 }
 
 menu_comandos() {
@@ -54,17 +56,17 @@ mostrar_logs() {
   echo "2- Consulta por tipo (INFO, WARNING, ERROR)"
   echo "3- Consulta por fecha"
   echo "4- Salir"
-  read -p "Opción: " opcion
+  read -p "Opción: " opcion_logs
 
-  if [ "$opcion" == "1" ]; then
+  if [ "$opcion_logs" == "1" ]; then
     sudo journalctl -u vsftpd --no-pager | tail -n 20
-  elif [ "$opcion" == "2" ]; then
+  elif [ "$opcion_logs" == "2" ]; then
     read -p "Ingrese el tipo de log (INFO, WARNING, ERROR): " tipo
     sudo journalctl -u vsftpd --no-pager | grep -i "$tipo"
-  elif [ "$opcion" == "3" ]; then
+  elif [ "$opcion_logs" == "3" ]; then
     read -p "Ingrese la fecha (YYYY-MM-DD): " fecha
     sudo journalctl -u vsftpd --since "$fecha"
-  elif [ "$opcion" == "4" ]; then
+  elif [ "$opcion_logs" == "4" ]; then
     echo "Saliendo..."
     return
   eliminar_servicio
