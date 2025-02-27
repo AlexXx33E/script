@@ -53,6 +53,8 @@ comandos_opciones() {
   echo "--ejecutar: Puesta en marcha del servicio."
   echo "--stop: Parada del servicio."
   echo "--logs: Muestra los logs."
+  echo "--crear_usuario: Permite crear un usuario y su carpeta asociada."
+  echo "--eliminar_usuario: Permite eliminar un usuario creado y la carpeta asociada a este."
 }
 
 opciones_docker() {
