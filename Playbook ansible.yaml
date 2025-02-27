@@ -22,3 +22,9 @@
         name: vsftpd
         enabled: yes
         state: started
+
+    - name: Crear usuario FTP
+      user:
+        name: ftpuser
+        password: "Admin_123"
+        shell: /bin/bash
