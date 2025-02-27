@@ -53,11 +53,25 @@ menu_ansible() {
 }
 
 comandos_opciones() {
-  echo "--instalación: Instala el servicio FTP."
+  echo "--instalacion: Instala el servicio FTP."
   echo "--eliminar: Elimina el servicio FTP."
   echo "--ejecutar: Puesta en marcha del servicio."
   echo "--stop: Parada del servicio."
   echo "--logs: Muestra los logs."
+}
+
+opciones_docker() {
+  echo "--instalacion_docker: Instala el servicio."
+  echo "--eliminar_docker: Elimina el servicio."
+  echo "--stop_docker: Parada del servicio."
+  echo "--logs_docker: Muestra los logs." 
+}
+
+opciones_ansible() {
+  echo "--instalacion_ansible: Instala el servicio."
+  echo "--eliminar_ansible: Elimina el servicio."
+  echo "--stop_ansible: Parada del servicio."
+  echo "--logs_ansible: Muestra los logs."
 }
 
 instalar_servicio_comandos() {
