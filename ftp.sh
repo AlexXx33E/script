@@ -8,7 +8,6 @@ menu_principal() {
     echo "4) Salir: Sale del script".
     read -p "Opción: " opcion
 
-
 if [ "$opcion" == "1" ]; then
     echo "Redirigiendo hacia el menú de instalación por comandos..."
     menu_comandos
@@ -189,4 +188,4 @@ if [ "$1" == "--help_ansible" ]; then
 fi
 
 echo "Opción no válida. Usa --help para mostrar la ayuda del menú."
-exit 1
+menu_principal
