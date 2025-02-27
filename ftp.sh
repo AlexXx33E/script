@@ -31,11 +31,18 @@ fi
 menu_comandos() {
   echo "Instalación servicio FTP."
   echo "--datos_red: Muestra los datos de red de tu equipo."
-  echo "--status: Muestra el estado del servicio."
+  echo "--status: Muestra el estado del servicio en ese momento."
   echo "--menu: Elige la opción"
   echo "--help: Muestra la ayuda del programa."
 }
 
+menu_docker() {
+  echo "Instalación servicio FTP (Docker)."
+  echo "--datos_red_docker: Muestra los datos de red de tu equipo."
+  echo "--status_docker: Muestra el estado del servicio en ese momento."
+  echo "--menu_docker: Muestra las opciones del servicio."
+  echo "--help_docker: Muestra la ayuda del programa."
+}
 comandos_opciones() {
   echo "--instalación: Instala el servicio FTP."
   echo "--eliminar: Elimina el servicio FTP."
@@ -94,7 +101,7 @@ mostrar_logs() {
 }
 
 if [ "$1" == "--help" ]; then
-  mostrar_ayuda
+  menu_comandos
   exit 0
 fi
 
@@ -109,7 +116,7 @@ if [ "$1" == "--status" ]; then
 fi
 
 if [ "$1" == "--menu" ]; then
-  menu
+  comandos_opciones
   exit 0
 fi
 
