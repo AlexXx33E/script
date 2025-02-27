@@ -38,11 +38,20 @@ menu_comandos() {
 
 menu_docker() {
   echo "Instalación servicio FTP (Docker)."
-  echo "--datos_red_docker: Muestra los datos de red de tu equipo."
-  echo "--status_docker: Muestra el estado del servicio en ese momento."
+  echo "--datos_red: Muestra los datos de red de tu equipo."
+  echo "--status: Muestra el estado del servicio en ese momento."
   echo "--menu_docker: Muestra las opciones del servicio."
   echo "--help_docker: Muestra la ayuda del programa."
 }
+
+menu_ansible() {
+  echo "Instalación servicio FTP (con Ansible)."
+  echo "--datos_red: Muestra los datos de red de tu equipo."
+  echo "--status: Muestra el estado del servicio en ese momento."
+  echo "--menu_ansible: Muestra las opciones del servicio."
+  echo "--help_docker: Muestra la ayuda del programa."
+}
+
 comandos_opciones() {
   echo "--instalación: Instala el servicio FTP."
   echo "--eliminar: Elimina el servicio FTP."
