@@ -120,6 +120,18 @@ mostrar_logs_comandos() {
   fi
 }
 
+crear_usuario() {
+  read -p "Introduce el nombre de tu nuevo usuario: " usuario
+  sudo useradd -m -d /home/$usuario -s /usr/sbin/nologin $usuario
+  sudo passwd $usuario
+  echo "Usuario $usuario creado correctamente. Su carpeta estará en /home/$usuario."
+}
+
+eliminar_usuario() {
+  read -p "Introduce el nombre de usuario que quieres eliminar: " usuario
+  sudo userdel -r $usuario
+  echo "Usuario $usuario eliminado junto con su carpeta."
+}
 
 if [ "$1" == "--help" ]; then
   menu_comandos
