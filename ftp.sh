@@ -22,7 +22,6 @@ elif [ "$opcion" == "3" ]; then
     menu_ansible
 elif [ "$opcion" == "4" ]; then
     echo "Saliendo..."
-    menu_principal
     exit 0
 else 
     echo "Opción no válida. Inténtalo de nuevo."
@@ -114,7 +113,7 @@ mostrar_logs_comandos() {
   elif [ "$opcion_logs" == "4" ]; then
     echo "Saliendo..."
     return
-  eliminar_servicio
+  else
     echo "Opción no válida"
   fi
 }
@@ -124,22 +123,12 @@ if [ "$1" == "--help" ]; then
   exit 0
 fi
 
-if [ "$1" == "--datos_red" ]; then
-  ip add
-  exit 0
-fi
-
-if [ "$1" == "--status" ]; then
-  systemctl status vsftpd || echo "Error. No está instalado."
-  exit 0
-fi
-
 if [ "$1" == "--menu" ]; then
   comandos_opciones
   exit 0
 fi
 
-if [ "$1" == "--instalación" ]; then
+if [ "$1" == "--instalacion" ]; then
   instalar_servicio_comandos
   exit 0
 fi
