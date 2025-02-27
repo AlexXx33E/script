@@ -23,8 +23,16 @@
         enabled: yes
         state: started
 
-    - name: Crear usuario FTP
+    - name: Crear usuario
       user:
         name: ftpuser
         password: "Admin_123"
         shell: /bin/bash
+
+    - name: Crear directorio para el usuario
+      file:
+        path: /home/ftpuser/ftp
+        state: directory
+        owner: ftpuser
+        group: ftpuser
+        mode: '0755'
