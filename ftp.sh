@@ -7,6 +7,25 @@ menu_principal() {
     echo "3) --Ansible: El servicio FTP se instalará mediante el playbook de Ansible seleccionado." 
     echo "4) Salir: Sale del script".
     read -p "Opción: " opcion
+
+
+if [ "$opcion" == "1" ]; then
+    echo "Redirigiendo hacia el menú de instalación por comandos..."
+    menu_comandos
+elif [ "$opcion" == "2" ]; then
+    echo "Redirigiendo hacia el menú de instalación por Docker..."
+    menu_docker
+elif [ "$opcion" == "3" ]; then
+    echo "Redirigiendo hacia el menú de instalación por Ansible..."
+    menu_ansible
+elif [ "$opcion" == "4" ]; then
+    echo "Saliendo..."
+    menu_principal
+    exit 0
+else 
+    echo "Opción no válida. Inténtalo de nuevo."
+    menu_principal
+fi
 }
 
 menu_comandos() {
