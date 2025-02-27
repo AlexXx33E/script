@@ -1,6 +1,7 @@
 FROM ubuntu:latest
-RUN apt-gep update && apt-get install -y vsftpd
-COPY ftp.sh /home/maria/ftp.sh
-RUN chmod +x /home/maria/ftp.sh
+RUN apt-gep update && \ apt-get install -y vsftpd && \ apt-get clean
+COPY vsftpd.conf /etc/vsftpd.conf
+RUN useradd -m usuario_ftp && \ echo "usuario_ftp:pass_ftp" | chpasswd
+RUN mkdir -p /home/usuario_ftp/ftp_files && \ chown usuario_ftp:usuario_ftp /home/usuario_ftp/ftp_files
 EXPOSE 21 
-CMD ["/home/maria/ftp.sh"]
+CMD ["vsftpd", "/etc/vsftpd.conf"]
