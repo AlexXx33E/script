@@ -3,7 +3,16 @@
   hosts: all
   become: yes
   tasks:
-    - name: Instalar el paquete vsftpd
+    - name: Instalar el servicio vsftpd
       apt:
         name: vsftpd
         state: present
+
+    - name: Configurar vsftpd
+      template:
+        src: vsftpd.conf.j2
+        dest: /etc/vsftpd.conf
+        owner: root
+        group: root
+        mode: 0644
+        notify: Reiniciar vsftpd
