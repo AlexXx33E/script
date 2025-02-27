@@ -1,5 +1,8 @@
 #!/bin/bash
 
+ip add
+systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
+
 menu_principal() {
     echo "Elija el método de instalación del servicio FTP:"
     echo "1) --comandos: Irás al menú de instalación mediante comandos."
