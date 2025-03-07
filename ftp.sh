@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+
+
 ip add
 systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
 
@@ -8,7 +11,7 @@ menu_principal() {
     echo "1) --comandos: Irás al menú de instalación mediante comandos."
     echo "2) --Docker: Empezarás la instalación mediante Docker."
     echo "3) --Ansible: El servicio FTP se instalará mediante el playbook de Ansible seleccionado." 
-    echo "4) Salir: Sale del script".
+    echo "4) Salir: Sale del script."
     read -p "Opción: " opcion
 
 if [ "$opcion" == "1" ]; then
@@ -91,7 +94,7 @@ ejecutar_servicio_comandos() {
 } 
 
 parar_servicio_comandos() {
-  echo "Iniciando servicio FTP..."
+  echo "Deteniendo servicio FTP..."
   sudo systemctl stop vsftpd
   echo "El servicio está detenido."
 } 
@@ -121,14 +124,14 @@ mostrar_logs_comandos() {
 }
 
 crear_usuario() {
-  read -p "Introduce el nombre de tu nuevo usuario: " usuario
+  read -r -p "Introduce el nombre de tu nuevo usuario: " usuario
   sudo useradd -m -d /home/$usuario -s /usr/sbin/nologin $usuario
   sudo passwd $usuario
   echo "Usuario $usuario creado correctamente. Su carpeta estará en /home/$usuario."
 }
 
 eliminar_usuario() {
-  read -p "Introduce el nombre de usuario que quieres eliminar: " usuario
+  read -r -p "Introduce el nombre de usuario que quieres eliminar: " usuario
   sudo userdel -r $usuario
   echo "Usuario $usuario eliminado junto con su carpeta."
 }
