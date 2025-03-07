@@ -1,7 +1,7 @@
 FROM ubuntu:latest
-RUN apt-gep update && \ 
-  apt-get install -y vsftpd && \ 
-  apt-get clean
+RUN apt-get update && \
+    apt-get install -y vsftpd && \
+    apt-get clean
 COPY vsftpd.conf /etc/vsftpd.conf
 RUN useradd -m usuario_ftp && \ 
   echo "usuario_ftp:pass_ftp" | chpasswd
