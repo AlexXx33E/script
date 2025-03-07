@@ -63,6 +63,23 @@ EOF
     echo "Imagen Docker creada con éxito. Para ejecutarla usa: docker run -d -p 21:21 vsftpd_server"
 }
 
+eliminar_servicio_docker() {
+  echo "Eliminando contenedor vsftpd..."
+  docker rm -f vsftpd_server || echo "No hay contenedor en ejecución."
+  docker rmi -f vsftpd_server || echo "No hay imagen de Docker creada."
+  echo "Servicio Docker eliminado correctamente."
+}
+
+detener_servicio_docker() {
+    echo "Deteniendo contenedor vsftpd..."
+    docker stop vsftpd_server || echo "El contenedor ya está detenido."
+}
+
+mostrar_logs_docker() {
+    echo "Mostrando logs del contenedor FTP..."
+    docker logs vsftpd_server
+}
+
 menu_ansible() {
     echo "Instalación servicio FTP (con Ansible)."
     echo "--menu_ansible: Muestra las opciones del servicio."
@@ -120,6 +137,8 @@ eliminar_usuario() {
 ip add
 systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
  
+
+
 if [ "$1" == "--comandos" ]; then
     menu_comandos
     exit 0
@@ -165,16 +184,33 @@ if [ "$1" == "--eliminar_usuario" ]; then
     exit 0
 fi
 
+
 if [ "$1" == "--Docker" ]; then
     menu_docker
     exit 0
 fi
 
-if [ "$1" == "--instalacion_docker" ]; then
+elif [ "$1" == "--instalacion_docker" ]; then
     instalar_servicio_docker
     exit 0
 fi
 
+elif [ "$1" == "--eliminar_docker" ]; then
+    eliminar_servicio_docker
+    exit 0
+fi
 
-echo "Opción no válida. Usa --help para mostrar la ayuda del menú."
-menu_principal
+elif [ "$1" == "--stop_docker" ]; then
+    detener_servicio_docker
+    exit 0
+fi
+
+elif [ "$1" == "--logs_docker" ]; then
+    mostrar_logs_docker
+    exit 0
+fi
+
+else
+  echo "Opción no válida. Usa --help para mostrar la ayuda del menú."
+  menu_principal
+
