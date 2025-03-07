@@ -3,9 +3,10 @@ RUN apt-get update && \
     apt-get install -y vsftpd && \
     apt-get clean
 COPY vsftpd.conf /etc/vsftpd.conf
-RUN useradd -m usuario_ftp && \ 
-  echo "usuario_ftp:pass_ftp" | chpasswd
-RUN mkdir -p /home/usuario_ftp/ftp_files && \ 
-  chown usuario_ftp:usuario_ftp /home/usuario_ftp/ftp_files
+RUN useradd -m -d /home/usuario_ftp -s /usr/sbin/nologin usuario_ftp && \
+    echo "usuario_ftp:pass_ftp" | chpasswd
+RUN mkdir -p /home/usuario_ftp/ftp_files && \
+    chown usuario_ftp:usuario_ftp /home/usuario_ftp/ftp_files && \
+    chmod 755 /home/usuario_ftp
 EXPOSE 21 
-CMD ["vsftpd", "/etc/vsftpd.conf"]
+CMD ["vsftpd", "-o", "listen=NO", "-o", "listen_ipv6=YES"]
