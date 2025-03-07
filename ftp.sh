@@ -119,6 +119,11 @@ eliminar_usuario() {
 
 ip add
 systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
+ 
+if [ "$1" == "--comandos" ]; then
+    menu_comandos
+    exit 0
+fi
 
 if [ "$1" == "--help" ]; then
     menu_comandos
@@ -159,6 +164,17 @@ if [ "$1" == "--eliminar_usuario" ]; then
     eliminar_usuario
     exit 0
 fi
+
+if [ "$1" == "--Docker" ]; then
+    menu_docker
+    exit 0
+fi
+
+if [ "$1" == "--instalacion_docker" ]; then
+    instalar_servicio_docker
+    exit 0
+fi
+
 
 echo "Opción no válida. Usa --help para mostrar la ayuda del menú."
 menu_principal
