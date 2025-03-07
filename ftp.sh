@@ -2,6 +2,9 @@
 
 set -e
 
+ip add
+systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
+
 menu_principal() {
     echo "Elija el método de instalación del servicio FTP:"
     echo "1) --comandos: Irás al menú de instalación mediante comandos."
@@ -58,7 +61,6 @@ RUN mkdir -p /home/usuario_ftp/ftp_files && \
 EXPOSE 21 
 CMD ["vsftpd", "-o", "listen=NO", "-o", "listen_ipv6=YES"]
 EOF
-    
     docker build -t vsftpd_server .
     echo "Imagen Docker creada con éxito. Para ejecutarla usa: docker run -d -p 21:21 vsftpd_server"
 }
@@ -133,11 +135,10 @@ eliminar_usuario() {
     sudo userdel -r $usuario
     echo "Usuario $usuario eliminado junto con su carpeta."
 }
-
-ip add
-systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
- 
-
+if [ "$1" == "--menu_principal" ]; then
+  menu_principal
+  exit 0
+fi
 
 if [ "$1" == "--comandos" ]; then
     menu_comandos
@@ -190,22 +191,22 @@ if [ "$1" == "--Docker" ]; then
     exit 0
 fi
 
-elif [ "$1" == "--instalacion_docker" ]; then
+if [ "$1" == "--instalacion_docker" ]; then
     instalar_servicio_docker
     exit 0
 fi
 
-elif [ "$1" == "--eliminar_docker" ]; then
+if [ "$1" == "--eliminar_docker" ]; then
     eliminar_servicio_docker
     exit 0
 fi
 
-elif [ "$1" == "--stop_docker" ]; then
+if [ "$1" == "--stop_docker" ]; then
     detener_servicio_docker
     exit 0
 fi
 
-elif [ "$1" == "--logs_docker" ]; then
+if [ "$1" == "--logs_docker" ]; then
     mostrar_logs_docker
     exit 0
 fi
