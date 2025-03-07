@@ -36,8 +36,31 @@ menu_comandos() {
 
 menu_docker() {
     echo "Instalación servicio FTP (Docker)."
-    echo "--menu_docker: Muestra las opciones del servicio."
-    echo "--help_docker: Muestra la ayuda del programa."
+    echo "--instalacion_docker: Instala el servicio."
+    echo "--eliminar_docker: Elimina el servicio."
+    echo "--stop_docker: Parada del servicio."
+    echo "--logs_docker: Muestra los logs."
+}
+
+instalar_servicio_docker() {
+    echo "Creando Dockerfile y construyendo imagen para vsftpd..."
+    cat <<EOF > Dockerfile
+FROM ubuntu:latest
+RUN apt-get update && \
+    apt-get install -y vsftpd && \
+    apt-get clean
+COPY vsftpd.conf /etc/vsftpd.conf
+RUN useradd -m -d /home/usuario_ftp -s /usr/sbin/nologin usuario_ftp && \
+    echo "usuario_ftp:pass_ftp" | chpasswd
+RUN mkdir -p /home/usuario_ftp/ftp_files && \
+    chown usuario_ftp:usuario_ftp /home/usuario_ftp/ftp_files && \
+    chmod 755 /home/usuario_ftp
+EXPOSE 21 
+CMD ["vsftpd", "-o", "listen=NO", "-o", "listen_ipv6=YES"]
+EOF
+    
+    docker build -t vsftpd_server .
+    echo "Imagen Docker creada con éxito. Para ejecutarla usa: docker run -d -p 21:21 vsftpd_server"
 }
 
 menu_ansible() {
