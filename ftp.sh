@@ -161,3 +161,6 @@ mostrar_ultimos_logs() {
     menu_logs
 }
 
+mostrar_datos_red
+mostrar_estado_servicio
+menu_principal
