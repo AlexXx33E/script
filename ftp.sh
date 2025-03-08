@@ -114,11 +114,21 @@ instalar_con_ansible() {
     menu_principal
 }
 
-instalar_con_docker() {
+instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
-    # AQUI VA EL CONTENEDOR DE DOCKER"
-    echo "INSTALACIÓN por docker completada"
-    menu_principal
+    sudo apt update 
+    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add 
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    sudo apt update
+    sudo apt install -y docker-ce
+    sudo usermod -aG docker $USER
+    echo "Docker instalado correctamente"
+    echo "IMPORTANTE: REINICIA la sesión o el equipo para que se aplique los cambios"
+}
+
+instalar_con_docker() {
+    
 }
 
 eliminar_servicio_comandos() {
