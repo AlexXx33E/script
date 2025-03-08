@@ -150,10 +150,6 @@ instalar_ansible() {
 }
 
 instalar_con_ansible() {
-<<<<<<< HEAD
-    echo "Instalando el servicio FTP con ANSIBLE..."
-=======
->>>>>>> 616a65b1ca1a58163882f01faea23bfda8ff7602
     if ! command -v ansible &>/dev/null; then
         echo "Ansible no está instalado. Instalando Ansible..."
         instalar_ansible
@@ -204,12 +200,8 @@ echo "Ejecutando playbook de Ansible..."
     else
         echo "Error: No se pudo instalar el servicio FTP con Ansible. Revisa los logs."
     fi
-
-<<<<<<< HEAD
     menu_principal
     echo "INSTALACIÓN por ansible completada"
-=======
->>>>>>> 616a65b1ca1a58163882f01faea23bfda8ff7602
     menu_principal
 }
 
@@ -283,7 +275,6 @@ eliminar_servicio_comandos() {
         sudo rm -rf /var/log/vsftpd.log
         sudo rm -rf /srv/ftp
         sudo rm -rf /home/ftp
-        sudo reboot
         echo "Servicio eliminado completamente"
     
     elif command -v ansible &>/dev/null; then
