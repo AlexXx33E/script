@@ -7,8 +7,17 @@ mostrar_datos_red() {
     echo "-----------------------------"
 }
 
-ip add
-systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
+mostrar_estado_servicio() {
+    echo "-----------------------------"
+    echo "ESTADO DEL SERVICO FTP"
+    if systemctl is-active vsftpd &>/dev/null; then 
+        echo "El servicio FTP está activo"
+    else
+        echo "El servicio FTP está inactivo"
+    fi
+    echo "-----------------------------"
+
+}
 
 menu_principal() {
     echo "Elija el método de instalación del servicio FTP:"
