@@ -18,32 +18,66 @@ mostrar_estado_servicio() {
     echo "-----------------------------"
 
 }
-
 menu_principal() {
-    echo "Elija el método de instalación del servicio FTP:"
-    echo "1) --comandos: Irás al menú de instalación mediante comandos."
-    echo "2) --Docker: Empezarás la instalación mediante Docker."
-    echo "3) --Ansible: El servicio FTP se instalará mediante el playbook de Ansible seleccionado." 
-    echo "4) Salir: Sale del script."
-    read -p "Opción: " opcion
+    echo "----------------------------------------------------"
+    echo "MENÚ DE GESTIÓN DEL SERVICIO"
+    echo "1) Instalación del servicio"
+    echo "2) Elimina el servicio"
+    echo "3) Pone en marcha el servicio"
+    echo "4) Para el servicio "
+    echo "5) Consulta los logs"
+    echo "6) Salir"
+    read -p "Seleciona una opción (del 1 al 6): " opcion
 
     if [ "$opcion" == "1" ]; then
-        echo "Redirigiendo hacia el menú de instalación por comandos..."
-        menu_comandos
+        menu_instalacion
     elif [ "$opcion" == "2" ]; then
-        echo "Redirigiendo hacia el menú de instalación por Docker..."
-        menu_docker
+        eliminar_servicio_comandos
     elif [ "$opcion" == "3" ]; then
-        echo "Redirigiendo hacia el menú de instalación por Ansible..."
-        menu_ansible
+       ejecutar_servicio_comandos
     elif [ "$opcion" == "4" ]; then
-        echo "Saliendo..."
+        parar_servicio_comandos
+    elif [ "$opcion" == "5" ]; then
+        menu_logs
+    elif [ "$opcion" == "6" ]; then
+        echo "Saliendo del MENÚ PRINCIPAL"
         exit 0
-    else 
-        echo "Opción no válida. Inténtalo de nuevo."
+    else
+        echo "Opción no válida. Intentalo de nuevo"
         menu_principal
     fi
 }
+
+
+menu_instalacion() {
+    echo "----------------------------------------------------"
+    echo "MENÚ método de instalación del servicio FTP:"
+    echo "1) Instalar mediante COMANDOS"
+    echo "2) Instalar mediande ANSIBLE"
+    echo "3) Instalar mediante DOCKER" 
+    echo "4) Volver al menú principal"
+    read -p "Seleccione una opción (del 1 al 4): " opcion
+
+    if [ "$opcion" == "1" ]; then
+        echo "Instalando por comandos..."
+        instalar_con_comandos
+    elif [ "$opcion" == "2" ]; then
+        echo "Instalación por Docker..."
+        instalar_con_ansible
+    elif [ "$opcion" == "3" ]; then
+        echo "Instalando por Ansible..."
+        instalar_con_docker
+    elif [ "$opcion" == "4" ]; then
+        echo "Volviendo...."
+        menu_principal
+    else 
+        echo "Opción no válida. Inténtalo de nuevo."
+        menu_instalacion
+    fi
+}
+
+
+
 
 menu_comandos() {
     echo "Instalación servicio FTP."
@@ -102,15 +136,7 @@ menu_ansible() {
     echo "--help_ansible: Muestra la ayuda del programa."
 }
 
-comandos_opciones() {
-    echo "--instalacion: Instala el servicio FTP."
-    echo "--eliminar: Elimina el servicio FTP."
-    echo "--ejecutar: Puesta en marcha del servicio."
-    echo "--stop: Parada del servicio."
-    echo "--logs: Muestra los logs."
-    echo "--crear_usuario: Permite crear un usuario y su carpeta asociada."
-    echo "--eliminar_usuario: Permite eliminar un usuario creado y la carpeta asociada a este."
-}
+
 
 instalar_servicio_comandos() {
     echo "Instalando el servicio FTP..."
