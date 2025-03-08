@@ -1,0 +1,97 @@
+---
+- name: Gestión completa del servicio FTP en Ubuntu
+  hosts: all
+  become: yes
+  vars:
+    ftp_user: ftpuser
+    ftp_password: "Admin_123"
+    ftp_home: "/home/{{ ftp_user }}/ftp"
+
+  tasks:
+    - name: Actualizar la cache de apt
+      apt:
+        update_cache: yes
+      when: install_service is defined and install_service
+
+    - name: Instalar el servicio FTP
+      apt:
+        name: vsftpd
+        state: present
+      when: install_service is defined and install_service
+
+    - name: Iniciar y habilitar el servicio FTP
+      service:
+        name: vsftpd
+        enabled: yes
+        state: started
+      when: start_service is defined and start_service
+
+    - name: Detener el servicio FTP
+      service:
+        name: vsftpd
+        state: stopped
+      when: stop_service is defined and stop_service
+
+    - name: Eliminar el servicio FTP
+      apt:
+        name: vsftpd
+        state: absent
+        purge: yes
+        autoremove: yes
+      when: remove_service is defined and remove_service
+
+    - name: Crear usuario ftpuser
+      user:
+        name: "{{ ftp_user }}"
+        password: "{{ ftp_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        home: "{{ ftp_home }}"
+      when: create_user is defined and create_user
+
+    - name: Crear directorio para el usuario ftpuser
+      file:
+        path: "{{ ftp_home }}"
+        state: directory
+        owner: "{{ ftp_user }}"
+        group: "{{ ftp_user }}"
+        mode: '0755'
+      when: create_user is defined and create_user
+
+    - name: Eliminar usuario ftpuser
+      user:
+        name: "{{ ftp_user }}"
+        state: absent
+        remove: yes
+      when: remove_user is defined and remove_user
+
+    - name: Eliminar directorio del usuario ftpuser
+      file:
+        path: "{{ ftp_home }}"
+        state: absent
+      when: remove_user is defined and remove_user
+
+    - name: Consultar logs del servicio FTP por fecha
+      command: journalctl -u vsftpd --since "{{ log_date }}"
+      when: log_date is defined
+      register: vsftpd_logs_date
+
+    - name: Mostrar logs por fecha
+      debug:
+        msg: "{{ vsftpd_logs_date.stdout_lines }}"
+      when: log_date is defined
+
+    - name: Consultar logs del servicio FTP por tipo
+      command: journalctl -u vsftpd --no-pager | grep -i "{{ log_type }}"
+      when: log_type is defined
+      register: vsftpd_logs_type
+
+    - name: Mostrar logs por tipo
+      debug:
+        msg: "{{ vsftpd_logs_type.stdout_lines }}"
+      when: log_type is defined
+
+  handlers:
+    - name: Reiniciar FTP
+      service:
+        name: vsftpd
+        state: restarted
