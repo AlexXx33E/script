@@ -149,3 +149,15 @@ consultar_logs_por_fecha() {
     menu_logs
 }
 
+consultar_logs_por_tipo() {
+    read -p "Ingrese el tipo de log (INFO, WARNING, ERROR): " tipo
+    sudo journalctl -u vsftpd --no-pager | grep -i "$tipo"
+    menu_logs
+}
+
+mostrar_ultimos_logs() {
+    echo "Mostrando los últimos 20 logs...."
+    sudo journalctl -u vsftpd --no-pager | tail -n 20
+    menu_logs
+}
+
