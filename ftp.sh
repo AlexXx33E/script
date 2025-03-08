@@ -239,9 +239,17 @@ inicia_servicio_comandos() {
 
 parar_servicio_comandos() {
     echo "Deteniendo el servicio FTP..."
-    
-    sudo systemctl stop vsftpd
-    echo "Servicio detenido"
+    if docker ps | grep ftp_server &>/dev/null; then
+        echo "El servicio FTP fue instalado con Docker. Deteniendo el contenedor..."
+        sudo docker stop ftp_server
+        echo "El servicio FTP fue detenido correctamente"
+    elif systemctl list-units --full -all | grep -q vsftpd; then
+        echo "El servicio FTP fue instalado con comandos. Deteniendo el servicio..."
+        sudo systemctl stop vsftpd
+        echo "Servicio detenido correctamente"
+    else 
+        echo "No se encontró una instalación del servicio FTP"
+    fi
     menu_principal
 }
 
