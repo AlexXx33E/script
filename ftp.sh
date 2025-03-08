@@ -197,14 +197,27 @@ instalar_con_docker() {
 
 eliminar_servicio_comandos() {
     echo "Eliminando el servicio FTP..."
-    sudo systemctl stop vsftpd
-    sudo apt remove --purge vsftpd
-    sudo rm -rf /etc/vsftpd
-    sudo rm -rf /var/log/vsftpd.log
-    sudo rm -rf /srv/ftp
-    sudo rm -rf /home/ftp
-    sudo reboot
-    echo "Servicio eliminado completamente"
+
+    if sudo docker ps -a | grep ftp_server &>/dev/null; then
+        echo "El servicio FTP fue instalado con Docker. Eliminando el contenedor..."
+        sudo docker stop ftp_server
+        sudo docker rm ftp_server
+        sudo docker rmi fauria/vsftpd
+        echo "Servicio FTP eliminado correctamente de Docker"
+    elif systemctl list-units --full -all | grep -q vsftpd; then
+        echo "El servicio FTP fue instalado con comandos. Eliminandolo..."
+        sudo systemctl stop vsftpd
+        sudo apt remove --purge vsftpd
+        sudo rm -rf /etc/vsftpd
+        sudo rm -rf /var/log/vsftpd.log
+        sudo rm -rf /srv/ftp
+        sudo rm -rf /home/ftp
+        sudo reboot
+        echo "Servicio eliminado completamente"
+    else 
+        echo "No se encontró una instalación del servicio FTP"
+    fi
+
     menu_principal
 }
 
