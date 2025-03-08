@@ -135,11 +135,16 @@ instalar_con_comandos() {
     menu_principal
 }
 
-instalar_con_ansible() {
-    echo "Instalando el servicio FTP con ANSIBLE..."
-    # AQUI VA EL ANSIBLE (instalación)
-    echo "INSTALACIÓN por ansible completada"
-    menu_principal
+instalar_ansible() {
+    echo "Instalando Ansible..."
+    sudo apt update
+    sudo apt install -y ansible
+    if command -v ansible &>/dev/null; then
+        echo "Ansible instalado correctamente"
+    else
+        echo "ERROR: Ansible no se instaló correctamente"
+        exit 1
+    fi
 }
 
 instalar_docker() {
