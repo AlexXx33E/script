@@ -128,7 +128,30 @@ instalar_docker() {
 }
 
 instalar_con_docker() {
+    if ! command -v docker &>/dev/null; then
+        echo "Docker no está instalado. Instalando Docker..."
+        instalar_docker
+        echo "IMPORTANTE: Ejecuta de nuevo el script después de reiniciar la sesión"
+        exit 0
+    fi
+    echo "Descargando la imagen FTP...."
+    sudo docker pull fauria/vsftpd
+
+    echo "Ejecutando el contenedor FTP..."
+    sudo docker run -d \ 
+        --name ftp_server \
+        -p 21:21 \
+        -p 20:20 \
+        -p 21100-21110:21100-21110 \
+        -e FTP_USER=ftpuser \
+        -e FTP_PASS=ftppassword \
+        -e PASV_MIN_PORT=21100 \
+        -e PASV_MAX_PORT=21110 \
+        --restart always \
+        fauria/vsftpd
     
+    echo "Servicio FTP (Docker) instalado y en ejecución"
+    menu_principal
 }
 
 eliminar_servicio_comandos() {
