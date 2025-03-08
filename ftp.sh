@@ -56,6 +56,7 @@ menu_instalacion() {
     echo "2) Instalar mediande ANSIBLE"
     echo "3) Instalar mediante DOCKER" 
     echo "4) Volver al menú principal"
+     echo "----------------------------------------------------"
     read -p "Seleccione una opción (del 1 al 4): " opcion
 
     if [ "$opcion" == "1" ]; then
@@ -76,7 +77,30 @@ menu_instalacion() {
     fi
 }
 
+menu_logs() {
+    echo "----------------------------------------------------"
+    echo "1) Consulta los logs por FECHA"
+    echo "2) Consula los logs por TIPO (INFO, WARNING, ERROR)"
+    echo "3) Mostrar los últimos 20 logs"
+    echo "4) Volver al menú principal"
+    echo "----------------------------------------------------"
+    read -p "Seleccione una opción (del 1 al 4): " opcion
 
+    if [ "$opcion" == "1"]; then
+        consultar_logs_por_fecha
+    elif [ "$opcion" == "2" ]; then
+        consultar_logs_por_tipo
+    elif [ "$opcion" == "3" ]; then
+        mostrar_ultimos_logs
+    elif [ "$opcion" == "4" ]; then
+        menu_principal
+    else
+        echo "Opción no válida. Intentalo de nuevo"
+        menu_logs
+    fi
+
+    
+}
 
 
 menu_comandos() {
