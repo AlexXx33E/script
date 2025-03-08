@@ -147,6 +147,13 @@ instalar_ansible() {
     fi
 }
 
+instalar_con_ansible() {
+    if ! command -v ansible &>/dev/null; then
+        echo "Ansible no está instalado. Instalando Ansible..."
+        instalar_ansible
+    fi
+
+
 instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
     sudo apt update 
