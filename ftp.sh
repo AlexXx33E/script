@@ -190,6 +190,9 @@ instalar_con_ansible() {
         mode: '0755'
 EOF
 
+echo "Ejecutando playbook de Ansible..."
+    ansible-playbook -i localhost, -c local playbook_ansible_completo.yaml
+    
 instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
     sudo apt update 
