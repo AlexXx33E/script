@@ -34,7 +34,7 @@ menu_principal() {
     elif [ "$opcion" == "2" ]; then
         eliminar_servicio_comandos
     elif [ "$opcion" == "3" ]; then
-       ejecutar_servicio_comandos
+       inicia_servicio_comandos
     elif [ "$opcion" == "4" ]; then
         parar_servicio_comandos
     elif [ "$opcion" == "5" ]; then
@@ -120,3 +120,32 @@ instalar_con_docker() {
     echo "INSTALACIÓN por docker completada"
     menu_principal
 }
+
+eliminar_servicio_comandos() {
+    echo "Eliminando el servicio FTP..."
+    sudo apt purge -y vsftpd && sudo apt autoremove -y
+    sudo rm -rf /etc/vsftpd /var/log/vsftpd.log /srv/ftp /home/ftp
+    echo "Servicio eliminado completamente"
+    menu_principal
+}
+
+inicia_servicio_comandos() {
+    echo "Iniciando el servicio FTP..."
+    sudo systemctl star vsftpd
+    echo "Servicio iniciado"
+    menu_principal
+}
+
+parar_servicio_comandos() {
+    echo "Deteniendo el servicio FTP..."
+    sudo systemctl stop vsftpd
+    echo "Servicio detenido"
+    menu_principal
+}
+
+consultar_logs_por_fecha() {
+    read -p "Ingrese la fecha (YYYY-MM-DD): " fecha
+    sudo journalctl -u vsftpd --since "$fecha"
+    menu_logs
+}
+
