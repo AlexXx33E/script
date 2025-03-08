@@ -10,10 +10,20 @@ mostrar_datos_red() {
 mostrar_estado_servicio() {
     echo "-----------------------------"
     echo "ESTADO DEL SERVICO FTP"
-    if systemctl is-active vsftpd &>/dev/null; then 
-        echo "El servicio FTP está activo"
+
+    if sudo docker ps -a | grep ftp_server &>/dev/null; then
+        echo "El servicio FTP está instalado con Docker"
+        if sudo docker ps | grep ftp_server &>/dev/null; then
+            echo "El contenedor FTP está en ejecución"
+        else
+            echo "El contenedor FTP está en ejecución"
+        fi
     else
-        echo "El servicio FTP está inactivo"
+        if systemctl is-active vsftpd &>/dev/null; then 
+            echo "El servicio FTP está activo"
+        else
+            echo "El servicio FTP está inactivo"
+        fi
     fi
     echo "-----------------------------"
 
