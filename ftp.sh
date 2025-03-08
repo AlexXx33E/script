@@ -137,8 +137,23 @@ instalar_con_comandos() {
     menu_principal
 }
 
+instalar_ansible() {
+    echo "Instalando Ansible..."
+    sudo apt update
+    sudo apt install -y ansible
+    if command -v ansible &>/dev/null; then
+        echo "Ansible instalado correctamente"
+    else
+        echo "ERROR: Ansible no se instaló correctamente"
+        exit 1
+    fi
+}
+
 instalar_con_ansible() {
+<<<<<<< HEAD
     echo "Instalando el servicio FTP con ANSIBLE..."
+=======
+>>>>>>> 616a65b1ca1a58163882f01faea23bfda8ff7602
     if ! command -v ansible &>/dev/null; then
         echo "Ansible no está instalado. Instalando Ansible..."
         instalar_ansible
@@ -190,8 +205,11 @@ echo "Ejecutando playbook de Ansible..."
         echo "Error: No se pudo instalar el servicio FTP con Ansible. Revisa los logs."
     fi
 
+<<<<<<< HEAD
     menu_principal
     echo "INSTALACIÓN por ansible completada"
+=======
+>>>>>>> 616a65b1ca1a58163882f01faea23bfda8ff7602
     menu_principal
 }
 
