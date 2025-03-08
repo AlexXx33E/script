@@ -1,6 +1,11 @@
 #!/bin/bash
 
-set -e
+mostrar_datos_red() {
+    echo "-----------------------------"
+    echo "DATOS DE RED:"
+    ip add show | grep "inet " | cut -d" " -f5,6
+    echo "-----------------------------"
+}
 
 ip add
 systemctl status vsftpd || echo "Error. El servicio FTP no está instalado."
