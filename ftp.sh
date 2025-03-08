@@ -125,20 +125,20 @@ instalar_docker() {
     sudo usermod -aG docker $USER
     echo "Docker instalado correctamente"
     echo "IMPORTANTE: REINICIA la sesión o el equipo para que se aplique los cambios"
+    sudo reboot
+    exit 0
 }
 
 instalar_con_docker() {
     if ! command -v docker &>/dev/null; then
         echo "Docker no está instalado. Instalando Docker..."
         instalar_docker
-        echo "IMPORTANTE: Ejecuta de nuevo el script después de reiniciar la sesión"
-        exit 0
     fi
     echo "Descargando la imagen FTP...."
     sudo docker pull fauria/vsftpd
 
     echo "Ejecutando el contenedor FTP..."
-    sudo docker run -d \ 
+    sudo docker run -d \
         --name ftp_server \
         -p 21:21 \
         -p 20:20 \
@@ -149,15 +149,24 @@ instalar_con_docker() {
         -e PASV_MAX_PORT=21110 \
         --restart always \
         fauria/vsftpd
-    
-    echo "Servicio FTP (Docker) instalado y en ejecución"
+    if [ $? -eq 0 ]; then
+        echo "Servicio FTP (Docker) instalado y en ejecución"
+    else
+        echo "Error: No se pudo ejecutar el contenedor FTP. Revisa los logs."
+    fi
     menu_principal
+  
 }
 
 eliminar_servicio_comandos() {
     echo "Eliminando el servicio FTP..."
-    sudo apt purge -y vsftpd && sudo apt autoremove -y
-    sudo rm -rf /etc/vsftpd /var/log/vsftpd.log /srv/ftp /home/ftp
+    sudo systemctl stop vsftpd
+    sudo apt remove --purge vsftpd
+    sudo rm -rf /etc/vsftpd
+    sudo rm -rf /var/log/vsftpd.log
+    sudo rm -rf /srv/ftp
+    sudo rm -rf /home/ftp
+    sudo reboot
     echo "Servicio eliminado completamente"
     menu_principal
 }
