@@ -223,13 +223,23 @@ eliminar_servicio_comandos() {
 
 inicia_servicio_comandos() {
     echo "Iniciando el servicio FTP..."
-    sudo systemctl start vsftpd
-    echo "Servicio iniciado"
+    if sudo docker ps -a | grep ftp_server &>/dev/null; then
+        echo "El servicio FTP fue instalado con Docker. Iniciando contenedor..."
+        sudo docker start ftp_server
+        echo "El servicio FTP se inició correctamente"
+    elif systemctl list-units --full -all | grep -q vsftpd; then
+        echo "El servicio FTP fue instalado con comandos. Iniciando..."
+        sudo systemctl start vsftpd
+        echo "Servicio FTP iniciado"
+    else 
+        echo "No se encontró una instalación del servicio FTP"
+    fi
     menu_principal
 }
 
 parar_servicio_comandos() {
     echo "Deteniendo el servicio FTP..."
+    
     sudo systemctl stop vsftpd
     echo "Servicio detenido"
     menu_principal
