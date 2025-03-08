@@ -36,8 +36,10 @@ menu_principal() {
     echo "3) Pone en marcha el servicio"
     echo "4) Para el servicio "
     echo "5) Consulta los logs"
-    echo "6) Salir"
-    read -p "Seleciona una opción (del 1 al 6): " opcion
+    echo "6) Crear usuario"
+    echo "7) Eliminar usuario"
+    echo "8) Salir"
+    read -p "Seleciona una opción (del 1 al 8): " opcion
 
     if [ "$opcion" == "1" ]; then
         menu_instalacion
@@ -50,6 +52,10 @@ menu_principal() {
     elif [ "$opcion" == "5" ]; then
         menu_logs
     elif [ "$opcion" == "6" ]; then
+        crear_usuario
+    elif [ "$opcion" == "7" ]; then
+        eliminar_usuario
+    elif [ "$opcion" == "8" ]; then
         echo "Saliendo del MENÚ PRINCIPAL"
         exit 0
     else
@@ -58,6 +64,18 @@ menu_principal() {
     fi
 }
 
+crear_usuario() {
+    read -p "Introduce el nombre de tu nuevo usuario: " usuario
+    sudo useradd -m -d /home/$usuario -s /usr/sbin/nologin $usuario
+    sudo passwd $usuario
+    echo "El usuario $usuario se creo correctamente."
+}
+
+eliminar_usuario() {
+    read -p "Introduc el nombre del usuario que quieres eliminar: " usuario
+    sudo userdel -r $usuario
+    echo "El ususario $usuario se elimino correctamente"
+}
 
 menu_instalacion() {
     echo "----------------------------------------------------"
