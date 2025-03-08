@@ -86,7 +86,7 @@ menu_logs() {
     echo "----------------------------------------------------"
     read -p "Seleccione una opción (del 1 al 4): " opcion
 
-    if [ "$opcion" == "1"]; then
+    if [ "$opcion" == "1" ]; then
         consultar_logs_por_fecha
     elif [ "$opcion" == "2" ]; then
         consultar_logs_por_tipo
@@ -131,7 +131,7 @@ eliminar_servicio_comandos() {
 
 inicia_servicio_comandos() {
     echo "Iniciando el servicio FTP..."
-    sudo systemctl star vsftpd
+    sudo systemctl start vsftpd
     echo "Servicio iniciado"
     menu_principal
 }
