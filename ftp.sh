@@ -28,6 +28,7 @@ mostrar_estado_servicio() {
     echo "-----------------------------"
 
 }
+
 menu_principal() {
     echo "----------------------------------------------------"
     echo "MENÚ DE GESTIÓN DEL SERVICIO"
@@ -39,6 +40,7 @@ menu_principal() {
     echo "6) Crear usuario"
     echo "7) Eliminar usuario"
     echo "8) Salir"
+    echo "----------------------------------------------------"
     read -p "Seleciona una opción (del 1 al 8): " opcion
 
     if [ "$opcion" == "1" ]; then
@@ -137,7 +139,58 @@ instalar_con_comandos() {
 
 instalar_con_ansible() {
     echo "Instalando el servicio FTP con ANSIBLE..."
-    # AQUI VA EL ANSIBLE (instalación)
+    if ! command -v ansible &>/dev/null; then
+        echo "Ansible no está instalado. Instalando Ansible..."
+        instalar_ansible
+    fi
+
+    echo "Creando playbook de Ansible..."
+    cat <<EOF > playbook_ansible_completo.yaml
+---
+- name: Instalar y configurar servidor FTP en Ubuntu
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Actualizar la cache de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar el servicio vsftpd
+      apt:
+        name: vsftpd
+        state: present
+
+    - name: Iniciar y habilitar el servicio vsftpd
+      service:
+        name: vsftpd
+        enabled: yes
+        state: started
+
+    - name: Crear usuario ftpuser
+      user:
+        name: ftpuser
+        password: "{{ 'Admin_123' | password_hash('sha512') }}"
+        shell: /bin/bash
+
+    - name: Crear directorio para el usuario ftpuser
+      file:
+        path: /home/ftpuser/ftp
+        state: directory
+        owner: ftpuser
+        group: ftpuser
+        mode: '0755'
+EOF
+
+echo "Ejecutando playbook de Ansible..."
+    ansible-playbook -i localhost, -c local playbook_ansible_completo.yaml
+
+    if [ $? -eq 0 ]; then
+        echo "Servicio FTP instalado y configurado correctamente con Ansible"
+    else
+        echo "Error: No se pudo instalar el servicio FTP con Ansible. Revisa los logs."
+    fi
+
+    menu_principal
     echo "INSTALACIÓN por ansible completada"
     menu_principal
 }
@@ -214,6 +267,44 @@ eliminar_servicio_comandos() {
         sudo rm -rf /home/ftp
         sudo reboot
         echo "Servicio eliminado completamente"
+    
+    elif command -v ansible &>/dev/null; then
+        echo "El servicio FTP fue instalado con Ansible. Eliminando..."
+          echo "Creando playbook de Ansible..."
+    cat <<EOF > playbook_eliminar_ftp.yaml
+---
+- name: Eliminar servicio FTP en Ubuntu
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Detener el servicio vsftpd si está ejecutado
+      service:
+        name: vsftpd
+        state: stopped
+        enabled: no
+
+    - name: Eliminar el servicio vsftpd
+      apt:
+        name: vsftpd
+        state: absent
+
+    - name: Eliminar el usuaruo ftpuser
+      user:
+        name: ftpuser
+        state: absent
+        remove: yes
+
+    - name: Elimina los directorios asociados al servicio FTP
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /etc/vsftpd
+        - /var/log/vsftpd.log
+        - /srv/ftp
+        - /home/ftp
+EOF
+
     else 
         echo "No se encontró una instalación del servicio FTP"
     fi
@@ -247,6 +338,8 @@ parar_servicio_comandos() {
         echo "El servicio FTP fue instalado con comandos. Deteniendo el servicio..."
         sudo systemctl stop vsftpd
         echo "Servicio detenido correctamente"
+    #elif command -v ansible &>/dev/null; then
+    
     else 
         echo "No se encontró una instalación del servicio FTP"
     fi
