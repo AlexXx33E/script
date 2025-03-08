@@ -192,7 +192,16 @@ EOF
 
 echo "Ejecutando playbook de Ansible..."
     ansible-playbook -i localhost, -c local playbook_ansible_completo.yaml
-    
+
+    if [ $? -eq 0 ]; then
+        echo "Servicio FTP instalado y configurado correctamente con Ansible"
+    else
+        echo "Error: No se pudo instalar el servicio FTP con Ansible. Revisa los logs."
+    fi
+
+    menu_principal
+}
+
 instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
     sudo apt update 
