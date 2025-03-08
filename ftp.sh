@@ -118,15 +118,19 @@ instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
     sudo apt update 
     sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add 
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt update
-    sudo apt install -y docker-ce
+    sudo apt install -y docker-ce docker-ce-li containerd.io
     sudo usermod -aG docker $USER
-    echo "Docker instalado correctamente"
-    echo "IMPORTANTE: REINICIA la sesión o el equipo para que se aplique los cambios"
-    sudo reboot
+
+    if command -v docker &> dev/null; then
+        echo "Docker instalado correctamente"
+        echo "IMPORTANTE: REINICIA la sesión o el equipo para que se aplique los cambios"
     exit 0
+    else 
+        echo "ERROR: El docke no se instaló correctamente"
+    fi
 }
 
 instalar_con_docker() {
@@ -134,6 +138,7 @@ instalar_con_docker() {
         echo "Docker no está instalado. Instalando Docker..."
         instalar_docker
     fi
+
     echo "Descargando la imagen FTP...."
     sudo docker pull fauria/vsftpd
 
@@ -149,13 +154,17 @@ instalar_con_docker() {
         -e PASV_MAX_PORT=21110 \
         --restart always \
         fauria/vsftpd
+
     if [ $? -eq 0 ]; then
         echo "Servicio FTP (Docker) instalado y en ejecución"
+        sudo docker pull fauria/vsftpd
+        echo "El servicio FTP se ha iniciado automáticamente."
     else
         echo "Error: No se pudo ejecutar el contenedor FTP. Revisa los logs."
+        sudo docker logs ftp_server
     fi
+
     menu_principal
-  
 }
 
 eliminar_servicio_comandos() {
