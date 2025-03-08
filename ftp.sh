@@ -153,6 +153,42 @@ instalar_con_ansible() {
         instalar_ansible
     fi
 
+    echo "Creando playbook de Ansible..."
+    cat <<EOF > playbook_ansible_completo.yaml
+---
+- name: Instalar y configurar servidor FTP en Ubuntu
+  hosts: localhost
+  become: yes
+  tasks:
+    - name: Actualizar la cache de apt
+      apt:
+        update_cache: yes
+
+    - name: Instalar el servicio vsftpd
+      apt:
+        name: vsftpd
+        state: present
+
+    - name: Iniciar y habilitar el servicio vsftpd
+      service:
+        name: vsftpd
+        enabled: yes
+        state: started
+
+    - name: Crear usuario ftpuser
+      user:
+        name: ftpuser
+        password: "{{ 'Admin_123' | password_hash('sha512') }}"
+        shell: /bin/bash
+
+    - name: Crear directorio para el usuario ftpuser
+      file:
+        path: /home/ftpuser/ftp
+        state: directory
+        owner: ftpuser
+        group: ftpuser
+        mode: '0755'
+EOF
 
 instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
