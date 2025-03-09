@@ -9,24 +9,33 @@ mostrar_datos_red() {
 
 mostrar_estado_servicio() {
     echo "-----------------------------"
-    echo "ESTADO DEL SERVICO FTP"
+    echo "ESTADO DEL SERVICIO FTP"
 
     if sudo docker ps -a | grep ftp_server &>/dev/null; then
         echo "El servicio FTP está instalado con Docker"
         if sudo docker ps | grep ftp_server &>/dev/null; then
             echo "El contenedor FTP está en ejecución"
         else
-            echo "El contenedor FTP está en ejecución"
+            echo "El contenedor FTP está detenido"
         fi
-    else
-        if systemctl is-active vsftpd &>/dev/null; then 
+    elif [ -f /etc/vsftpd_installed_with_ansible ]; then
+        echo "El servicio FTP está instalado con Ansible"
+        if systemctl is-active vsftpd &>/dev/null; then
             echo "El servicio FTP está activo"
         else
             echo "El servicio FTP está inactivo"
         fi
+    elif [ -f /etc/vsftpd_installed_with_commands ]; then
+        echo "El servicio FTP está instalado con comandos"
+        if systemctl is-active vsftpd &>/dev/null; then
+            echo "El servicio FTP está activo"
+        else
+            echo "El servicio FTP está inactivo"
+        fi
+    else
+        echo "El servicio FTP no está instalado"
     fi
     echo "-----------------------------"
-
 }
 
 menu_principal() {
@@ -35,104 +44,81 @@ menu_principal() {
     echo "1) Instalación del servicio"
     echo "2) Elimina el servicio"
     echo "3) Pone en marcha el servicio"
-    echo "4) Para el servicio "
+    echo "4) Para el servicio"
     echo "5) Consulta los logs"
     echo "6) Crear usuario"
     echo "7) Eliminar usuario"
     echo "8) Salir"
     echo "----------------------------------------------------"
-    read -p "Seleciona una opción (del 1 al 8): " opcion
+    read -p "Selecciona una opción (del 1 al 8): " opcion
 
-    if [ "$opcion" == "1" ]; then
-        menu_instalacion
-    elif [ "$opcion" == "2" ]; then
-        eliminar_servicio_comandos
-    elif [ "$opcion" == "3" ]; then
-       inicia_servicio_comandos
-    elif [ "$opcion" == "4" ]; then
-        parar_servicio_comandos
-    elif [ "$opcion" == "5" ]; then
-        menu_logs
-    elif [ "$opcion" == "6" ]; then
-        crear_usuario
-    elif [ "$opcion" == "7" ]; then
-        eliminar_usuario
-    elif [ "$opcion" == "8" ]; then
-        echo "Saliendo del MENÚ PRINCIPAL"
-        exit 0
-    else
-        echo "Opción no válida. Intentalo de nuevo"
-        menu_principal
-    fi
+    case $opcion in
+        1) menu_instalacion ;;
+        2) eliminar_servicio_comandos ;;
+        3) inicia_servicio_comandos ;;
+        4) parar_servicio_comandos ;;
+        5) menu_logs ;;
+        6) crear_usuario ;;
+        7) eliminar_usuario ;;
+        8) echo "Saliendo del MENÚ PRINCIPAL"; exit 0 ;;
+        *) echo "Opción no válida. Inténtalo de nuevo"; menu_principal ;;
+    esac
 }
 
 crear_usuario() {
     read -p "Introduce el nombre de tu nuevo usuario: " usuario
     sudo useradd -m -d /home/$usuario -s /usr/sbin/nologin $usuario
     sudo passwd $usuario
-    echo "El usuario $usuario se creo correctamente."
+    echo "El usuario $usuario se creó correctamente."
 }
 
 eliminar_usuario() {
-    read -p "Introduc el nombre del usuario que quieres eliminar: " usuario
+    read -p "Introduce el nombre del usuario que quieres eliminar: " usuario
     sudo userdel -r $usuario
-    echo "El ususario $usuario se elimino correctamente"
+    echo "El usuario $usuario se eliminó correctamente"
 }
 
 menu_instalacion() {
     echo "----------------------------------------------------"
     echo "MENÚ método de instalación del servicio FTP:"
     echo "1) Instalar mediante COMANDOS"
-    echo "2) Instalar mediande ANSIBLE"
-    echo "3) Instalar mediante DOCKER" 
+    echo "2) Instalar mediante DOCKER"
+    echo "3) Instalar mediante ANSIBLE"
     echo "4) Volver al menú principal"
-     echo "----------------------------------------------------"
+    echo "----------------------------------------------------"
     read -p "Seleccione una opción (del 1 al 4): " opcion
 
-    if [ "$opcion" == "1" ]; then
-        echo "Instalando por comandos..."
-        instalar_con_comandos
-    elif [ "$opcion" == "2" ]; then
-        echo "Instalación por Docker..."
-        instalar_con_ansible
-    elif [ "$opcion" == "3" ]; then
-        echo "Instalando por Ansible..."
-        instalar_con_docker
-    elif [ "$opcion" == "4" ]; then
-        echo "Volviendo...."
-        menu_principal
-    else 
-        echo "Opción no válida. Inténtalo de nuevo."
-        menu_instalacion
-    fi
+    case $opcion in
+        1) instalar_con_comandos ;;
+        2) instalar_con_docker ;;
+        3) instalar_con_ansible ;;
+        4) menu_principal ;;
+        *) echo "Opción no válida. Inténtalo de nuevo."; menu_instalacion ;;
+    esac
 }
 
 menu_logs() {
     echo "----------------------------------------------------"
     echo "1) Consulta los logs por FECHA"
-    echo "2) Consula los logs por TIPO (INFO, WARNING, ERROR)"
+    echo "2) Consulta los logs por TIPO (INFO, WARNING, ERROR)"
     echo "3) Mostrar los últimos 20 logs"
     echo "4) Volver al menú principal"
     echo "----------------------------------------------------"
     read -p "Seleccione una opción (del 1 al 4): " opcion
 
-    if [ "$opcion" == "1" ]; then
-        consultar_logs_por_fecha
-    elif [ "$opcion" == "2" ]; then
-        consultar_logs_por_tipo
-    elif [ "$opcion" == "3" ]; then
-        mostrar_ultimos_logs
-    elif [ "$opcion" == "4" ]; then
-        menu_principal
-    else
-        echo "Opción no válida. Intentalo de nuevo"
-        menu_logs
-    fi
+    case $opcion in
+        1) consultar_logs_por_fecha ;;
+        2) consultar_logs_por_tipo ;;
+        3) mostrar_ultimos_logs ;;
+        4) menu_principal ;;
+        *) echo "Opción no válida. Inténtalo de nuevo"; menu_logs ;;
+    esac
 }
 
 instalar_con_comandos() {
     echo "Instalando el servicio FTP con COMANDOS..."
     sudo apt update && sudo apt install -y vsftpd
+    sudo touch /etc/vsftpd_installed_with_commands
     echo "INSTALACIÓN por comandos completada"
     menu_principal
 }
@@ -192,35 +178,34 @@ instalar_con_ansible() {
         mode: '0755'
 EOF
 
-echo "Ejecutando playbook de Ansible..."
+    echo "Ejecutando playbook de Ansible..."
     ansible-playbook -i localhost, -c local playbook_ansible_completo.yaml
 
     if [ $? -eq 0 ]; then
+        sudo touch /etc/vsftpd_installed_with_ansible
         echo "Servicio FTP instalado y configurado correctamente con Ansible"
     else
         echo "Error: No se pudo instalar el servicio FTP con Ansible. Revisa los logs."
     fi
     menu_principal
-    echo "INSTALACIÓN por ansible completada"
-    menu_principal
 }
 
 instalar_docker() {
     echo "Instalando el servicio FTP con DOCKER..."
-    sudo apt update 
+    sudo apt update
     sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
     sudo apt update
-    sudo apt install -y docker-ce docker-ce-li containerd.io
+    sudo apt install -y docker-ce docker-ce-cli containerd.io
     sudo usermod -aG docker $USER
 
-    if command -v docker &> dev/null; then
+    if command -v docker &>/dev/null; then
         echo "Docker instalado correctamente"
-        echo "IMPORTANTE: REINICIA la sesión o el equipo para que se aplique los cambios"
-    exit 0
-    else 
-        echo "ERROR: El docke no se instaló correctamente"
+        echo "IMPORTANTE: REINICIA la sesión o el equipo para que se apliquen los cambios"
+        exit 0
+    else
+        echo "ERROR: Docker no se instaló correctamente"
     fi
 }
 
@@ -230,7 +215,7 @@ instalar_con_docker() {
         instalar_docker
     fi
 
-    echo "Descargando la imagen FTP...."
+    echo "Descargando la imagen FTP..."
     sudo docker pull fauria/vsftpd
 
     echo "Ejecutando el contenedor FTP..."
@@ -248,8 +233,6 @@ instalar_con_docker() {
 
     if [ $? -eq 0 ]; then
         echo "Servicio FTP (Docker) instalado y en ejecución"
-        sudo docker pull fauria/vsftpd
-        echo "El servicio FTP se ha iniciado automáticamente."
     else
         echo "Error: No se pudo ejecutar el contenedor FTP. Revisa los logs."
         sudo docker logs ftp_server
@@ -267,20 +250,10 @@ eliminar_servicio_comandos() {
         sudo docker rm ftp_server
         sudo docker rmi fauria/vsftpd
         echo "Servicio FTP eliminado correctamente de Docker"
-    elif systemctl list-units --full -all | grep -q vsftpd; then
-        echo "El servicio FTP fue instalado con comandos. Eliminandolo..."
-        sudo systemctl stop vsftpd
-        sudo apt remove --purge vsftpd
-        sudo rm -rf /etc/vsftpd
-        sudo rm -rf /var/log/vsftpd.log
-        sudo rm -rf /srv/ftp
-        sudo rm -rf /home/ftp
-        echo "Servicio eliminado completamente"
-    
-    elif command -v ansible &>/dev/null; then
-        echo "El servicio FTP fue instalado con Ansible. Eliminando..."
-          echo "Creando playbook de Ansible..."
-    cat <<EOF > playbook_eliminar_ftp.yaml
+    elif [ -f /etc/vsftpd_installed_with_ansible ]; then
+        echo "El servicio FTP fue instalado con Ansible. Eliminándolo..."
+        echo "Creando playbook de Ansible..."
+        cat <<EOF > playbook_eliminar_ftp.yaml
 ---
 - name: Eliminar servicio FTP en Ubuntu
   hosts: localhost
@@ -297,13 +270,13 @@ eliminar_servicio_comandos() {
         name: vsftpd
         state: absent
 
-    - name: Eliminar el usuaruo ftpuser
+    - name: Eliminar el usuario ftpuser
       user:
         name: ftpuser
         state: absent
         remove: yes
 
-    - name: Elimina los directorios asociados al servicio FTP
+    - name: Eliminar los directorios asociados al servicio FTP
       file:
         path: "{{ item }}"
         state: absent
@@ -313,8 +286,20 @@ eliminar_servicio_comandos() {
         - /srv/ftp
         - /home/ftp
 EOF
-
-    else 
+        ansible-playbook -i localhost, -c local playbook_eliminar_ftp.yaml
+        sudo rm /etc/vsftpd_installed_with_ansible
+        echo "Servicio FTP eliminado correctamente con Ansible"
+    elif [ -f /etc/vsftpd_installed_with_commands ]; then
+        echo "El servicio FTP fue instalado con comandos. Eliminándolo..."
+        sudo systemctl stop vsftpd
+        sudo apt remove --purge vsftpd
+        sudo rm -rf /etc/vsftpd
+        sudo rm -rf /var/log/vsftpd.log
+        sudo rm -rf /srv/ftp
+        sudo rm -rf /home/ftp
+        sudo rm /etc/vsftpd_installed_with_commands
+        echo "Servicio eliminado completamente"
+    else
         echo "No se encontró una instalación del servicio FTP"
     fi
 
@@ -327,11 +312,19 @@ inicia_servicio_comandos() {
         echo "El servicio FTP fue instalado con Docker. Iniciando contenedor..."
         sudo docker start ftp_server
         echo "El servicio FTP se inició correctamente"
-    elif systemctl list-units --full -all | grep -q vsftpd; then
+    elif [ -f /etc/vsftpd_installed_with_ansible ]; then
+        echo "El servicio FTP fue instalado con Ansible. Iniciando el servicio..."
+        if ! systemctl is-active vsftpd &>/dev/null; then
+            sudo systemctl start vsftpd
+            echo "Servicio vsftpd iniciado correctamente."
+        else
+            echo "El servicio vsftpd ya está en ejecución."
+        fi
+    elif [ -f /etc/vsftpd_installed_with_commands ]; then
         echo "El servicio FTP fue instalado con comandos. Iniciando..."
         sudo systemctl start vsftpd
         echo "Servicio FTP iniciado"
-    else 
+    else
         echo "No se encontró una instalación del servicio FTP"
     fi
     menu_principal
@@ -339,17 +332,23 @@ inicia_servicio_comandos() {
 
 parar_servicio_comandos() {
     echo "Deteniendo el servicio FTP..."
-    if docker ps | grep ftp_server &>/dev/null; then
+    if sudo docker ps | grep ftp_server &>/dev/null; then
         echo "El servicio FTP fue instalado con Docker. Deteniendo el contenedor..."
         sudo docker stop ftp_server
         echo "El servicio FTP fue detenido correctamente"
-    elif systemctl list-units --full -all | grep -q vsftpd; then
+    elif [ -f /etc/vsftpd_installed_with_ansible ]; then
+        echo "El servicio FTP fue instalado con Ansible. Deteniendo el servicio..."
+        if systemctl is-active vsftpd &>/dev/null; then
+            sudo systemctl stop vsftpd
+            echo "Servicio vsftpd detenido correctamente."
+        else
+            echo "El servicio vsftpd ya estaba detenido."
+        fi
+    elif [ -f /etc/vsftpd_installed_with_commands ]; then
         echo "El servicio FTP fue instalado con comandos. Deteniendo el servicio..."
         sudo systemctl stop vsftpd
         echo "Servicio detenido correctamente"
-    #elif command -v ansible &>/dev/null; then
-    
-    else 
+    else
         echo "No se encontró una instalación del servicio FTP"
     fi
     menu_principal
@@ -368,7 +367,7 @@ consultar_logs_por_tipo() {
 }
 
 mostrar_ultimos_logs() {
-    echo "Mostrando los últimos 20 logs...."
+    echo "Mostrando los últimos 20 logs..."
     sudo journalctl -u vsftpd --no-pager | tail -n 20
     menu_logs
 }
